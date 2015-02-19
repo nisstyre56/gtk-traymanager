@@ -25,11 +25,11 @@ library
   build-depends: gtk >= 0.12.1 && < 0.14,
                  glib >= 0.12.1 && < 0.14,
                  base > 3 && < 5
-  pkgconfig-depends: gtk+-2.0, x11
+  pkgconfig-depends: gtk+-3.0, x11
   hs-source-dirs: src
   c-sources: src/c/eggtraymanager.c, src/c/eggmarshalers.c, src/c/gdk-helper.c
   ghc-options: -Wall
-  cc-options: -g
+  cc-options: -g -DGSEAL_ENABLE -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
   ghc-prof-options: -auto-all
 
 source-repository head
