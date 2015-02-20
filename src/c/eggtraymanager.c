@@ -400,13 +400,12 @@ egg_tray_manager_unmanage (EggTrayManager *manager)
 
   invisible = manager->invisible;
   g_assert (GTK_IS_INVISIBLE (invisible));
-  g_assert (GTK_WIDGET_REALIZED (invisible));
   g_assert (GDK_IS_WINDOW (gtk_widget_get_window(invisible)));
   
   display = GDK_WINDOW_XDISPLAY (gtk_widget_get_window(invisible));
   
   if (XGetSelectionOwner (display, manager->selection_atom) ==
-      GDK_WINDOW_XWINDOW (gtk_widget_get_window(invisible)))
+      GDK_WINDOW_XID (gtk_widget_get_window(invisible)))
     {
       timestamp = gdk_x11_get_server_time (gtk_widget_get_window(invisible));      
       XSetSelectionOwner (display, manager->selection_atom, None, timestamp);
@@ -453,11 +452,11 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
   
   timestamp = gdk_x11_get_server_time (gtk_widget_get_window(invisible));
   XSetSelectionOwner (DisplayOfScreen (xscreen), manager->selection_atom,
-		      GDK_WINDOW_XWINDOW (gtk_widget_get_window(invisible)), timestamp);
+		      GDK_WINDOW_XID (gtk_widget_get_window(invisible)), timestamp);
 
   /* Check if we were could set the selection owner successfully */
   if (XGetSelectionOwner (DisplayOfScreen (xscreen), manager->selection_atom) ==
-      GDK_WINDOW_XWINDOW (gtk_widget_get_window(invisible)))
+      GDK_WINDOW_XID (gtk_widget_get_window(invisible)))
     {
       XClientMessageEvent xev;
 
@@ -468,7 +467,7 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
       xev.format = 32;
       xev.data.l[0] = timestamp;
       xev.data.l[1] = manager->selection_atom;
-      xev.data.l[2] = GDK_WINDOW_XWINDOW (gtk_widget_get_window(invisible));
+      xev.data.l[2] = GDK_WINDOW_XID (gtk_widget_get_window(invisible));
       xev.data.l[3] = 0;	/* manager specific data */
       xev.data.l[4] = 0;	/* manager specific data */
 
